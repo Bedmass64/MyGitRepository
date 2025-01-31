@@ -245,3 +245,134 @@ void deleteNode(CircularDoublyLinkedListP list, int value){
     }
 }
 
+void deleteNodePosition(CircularDoublyLinkedListP list, int position){
+    //Checking to see if the list is empty
+    if (list->firstValue == NULL){
+            printf("The list is empty, No elements can be deleted.\n");
+            return;
+    } 
+    else{
+        NodeTP currentNode = list->firstValue;
+        //position for the current while counting from 0, will increment
+        int counter = 0;
+
+        //This is checking to make sure currentNode is not equal to the start 
+        //or the end of the list. This is pretty much the same function, but it
+        //is searching for a different condition, that of the position instead
+        //of the value as done in the previous function. 
+        while (currentNode != NULL) {
+            //this is checking to see if the counter is the same as position, 
+            //meaning the currentNode has been incremented the correct amount
+            //of times in order to be at the right position to do the rest of 
+            //the operations. 
+            if (counter == position) {
+                //checking for the case where it is the first node
+                if (currentNode->prevValue == NULL) {
+                    //all of the comments on these pointers are the same as the 
+                    //previous function, so to avoid redundancy i will not include
+                    //them for these pointers in this function.
+                    list->firstValue = currentNode->nextValue;
+                }
+                //checking for the case where it is the last node
+                if (currentNode->nextValue == NULL) {
+                    list->lastValue = currentNode->prevValue;
+                }
+                //checking to make sure it is within the scope of the list
+                if (currentNode->prevValue != NULL) {
+                    currentNode->prevValue->nextValue = currentNode->nextValue;
+                }
+                //checking to make sure it is within the scope of the list
+                if (currentNode->nextValue != NULL) {
+                    currentNode->nextValue->prevValue = currentNode->prevValue;
+                }
+                //setting all of the pointers for currentNode to NULL before 
+                //freeing it up
+                currentNode->nextValue = NULL;
+                currentNode->prevValue = NULL;
+                free(currentNode);
+                currentNode = NULL;
+                printf("Node at position %d has been deleted from the list\n", position);
+                //decrementing the elementCount used inside of main
+                (list->elementCount)--;
+                return;
+            }
+            else{
+                //This is cycling the values in order for all of them to be read
+                //inside of the while loop if the previous check was not met.
+                currentNode = currentNode->nextValue;
+                counter++;
+            }
+        }
+        //condition for while terminated, meaning the position was not found in
+        //the list. There is error handling inside of the main function to make sure
+        //this does not show up.
+        printf("Node at position %d was not found in the list\n", position);
+        
+    }
+}
+
+//F5 implementation
+//Purpose is to print out the entire contents of the C2LL 
+void printList(CircularDoublyLinkedListP list){
+    //Checking to make sure the list has content, as the first value of an empty
+    //list is NULL
+    if(list->firstValue == NULL){
+        printf("The list is empty\n");
+        return;
+    }
+    else{
+        //if the check to make sure the list is passed, then you allocate
+        //the first position of the list to the pointer of the node to the
+        //current element
+        NodeTP currentNode = list->firstValue;
+
+        //This here is done to show a visual of what a circular double linked
+        //list is, and that it start and ends with a NULL.
+        printf("\\0->");
+        //This loop condition will be met so long as it is not reading the first
+        //or last element of the list, as they are both NULL.
+        while(currentNode != NULL){
+            printf("%d->", currentNode->currentValue);
+            //This is incrementing the while loop by making this become the next 
+            //value that is being passed before checking the condition for the
+            //while loop again
+            currentNode = currentNode->nextValue;
+        }
+        //finish the formatting of the: \0->...->\0 
+        printf("\\0\n");
+    }
+}
+
+//F6 implementation
+//Purpose is to print out the entire contents of the C2LL in reversed order.
+void printListReverse(CircularDoublyLinkedListP list){
+    //Checking to make sure the list has content, as the first value of an empty
+    //list is NULL
+    if(list->firstValue == NULL){
+        printf("The list is empty\n");
+        return;
+    }
+    else{
+        //if the check to make sure the list is passed, then you allocate
+        //the first position of the list to the pointer of the node to the
+        //current element
+        //Only 3 differences between this function and the printList is that this
+        //pointer is starting at the last value
+        NodeTP current = list->lastValue;
+
+        //This here is done to show a visual of what a circular double linked
+        //list is, and that it start and ends with a NULL.
+        printf("\\0->");
+        //This loop condition will be met so long as it is not reading the first
+        //or last element of the list, as they are both NULL.
+        while(current != NULL){
+            printf("%d->", current->currentValue);
+            //This is decrementing the while loop by making this become the next 
+            //value that is being passed before checking the condition for the
+            //while loop again
+            current = current->prevValue;
+        }
+        //finish the formatting of the: \0->...->\0 
+        printf("\\0\n");
+    }
+}
