@@ -376,3 +376,131 @@ void printListReverse(CircularDoublyLinkedListP list){
         printf("\\0\n");
     }
 }
+
+int main(void){
+    //Construct a list using a similar list constructor as that found in the
+    //class slides.
+    CircularDoublyLinkedListP myList = constructList();
+    //defining selector outside of the while loop for the while condition
+    int selector = 0;
+
+    while(selector != -1){
+        //These are put here in order to reset the value of each variable in order
+        //to avoid being sent in an infinite loop.
+        int value = 0; 
+        int position = 0;
+        selector = 0;
+
+        printf("\nPlease select a number to do the following operation:\n\n");
+        printf("Add a value to the end of the list: 1\n");
+        printf("Add a value to a specified position in the list: 2\n");
+        printf("Delete the first node that shows up with the specified value: 3\n");
+        printf("Delete the first node that shows up at the specified position: 4\n");
+        printf("Prints out your circular doubly linked list: 5\n");
+        printf("Prints out your circular doubly linked list in reverse: 6\n");
+        printf("Exit: -1\n\n");
+        scanf("%d", &selector);
+
+        //Implementation for F1 inside of main
+        if (selector == 1){
+            printf("Option 1 selected\n");
+            printf("Please enter any value: ");
+            scanf("%d", &value);
+            addNode(myList, value);
+        }
+        //Implementation for F2 inside of main
+        //The user is able to add an element to position 0 of the empty list,
+        //therefore there is no handling a case where there is an empty list
+        else if (selector == 2){
+            printf("Option 2 selected\n");
+            printf("Please enter a value: ");
+            scanf("%d", &value);
+            printf("Please enter a position (counting from 0): ");
+            scanf("%d", &position);
+            addNodePosition(myList, value, position);
+        }
+        //Implementation for F3 inside of main
+        else if (selector == 3){
+            printf("Option 3 selected\n");
+            //checking here to see if the list is empty, although it is also done
+            //inside of the function itself. This is done here before prompting
+            //the user for input.
+            if (myList->elementCount == 0){
+                printf("Your list is currently empty, unable to delete elements\n");
+            }
+            else{
+                printf("Please enter the value of the node you would like to delete: \n");
+                scanf("%d", &value);
+                deleteNode(myList, value);
+            }
+        }
+        //Implementation for F4 inside of main
+        else if (selector == 4){
+            printf("Option 4 selected\n");
+            //checking to see if there are elements included in the list in order
+            //to prompt the user for input
+            if (myList->elementCount == 0){
+                printf("Your list is currently empty, unable to delete elements\n");
+            }
+            else{
+                printf("Please enter the position of the node you would like to delete (counting from 0): \n");
+                scanf("%d", &position);
+                //checking to see if the position they are giving is within the amount
+                //of elements there inside of the list
+                if (position < 0 || position > (myList->elementCount - 1)){
+                    printf("The position you are giving is outside of the scope of your list (0, %d)\n", (myList->elementCount - 1));
+                }
+                else{
+                    deleteNodePosition(myList, position);
+                }
+            }
+        }
+        //Implementation for F5 inside of main
+        else if (selector == 5){
+            if (myList->elementCount == 0){
+                printf("Your list is currently empty, unable to print list\n");
+            }
+            else{
+                printf("Option 5 selected\n");
+                printf("printing list: \n");
+                printList(myList);
+            }
+        }
+        //Implementation for F6 inside of main
+        else if (selector == 6){
+            if (myList->elementCount == 0){
+                printf("Your list is currently empty, unable to print list reversed\n");
+            }
+            else{
+                printf("Option 6 selected\n");
+                printf("printing list reversed: \n");
+                printListReverse(myList);
+            }
+        }
+        else if (selector == -1){
+            printf("Termination value selected\n\n");
+            printf("Have a nice day!\n");
+            //exit successful is here
+            return 0;
+        }
+        //error handling input that isnt a valid input, whether this is for
+        //position, value or selector, it will bring you here.
+        else{
+            printf("Please enter a valid input \n");
+            printf("(Press enter with a blank input to continue)\n");
+            
+            //user input handling for something that isnt valid. Will require
+            //the user to press enter with no input to exit the loop and go back
+            //to the options menu. this works for all user input, whether it is
+            //selector, value or position. different behaviour inside of my main
+            //terminal then that of falcon, where falcon does not require enter
+            //after invalid input, but my terminal does.
+            while (getchar() != '\n'){
+                fflush(stdin);
+            }
+        }
+    }
+    //if somehow you manage to get to this point in the loop, then you found a
+    //bug i did not
+    return 1;
+}
